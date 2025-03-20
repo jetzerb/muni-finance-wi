@@ -1,0 +1,12 @@
+# actual database files
+*.db
+*.ddb
+*.wal
+
+# compressed files
+*.zip
+*.gz
+*.tgz
+*.7z
+*.bzip
+*.rar
