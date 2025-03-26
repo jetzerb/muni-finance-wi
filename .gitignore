@@ -10,3 +10,8 @@
 *.7z
 *.bzip
 *.rar
+
+# data files
+*.xls
+*.xlsx
+*.csv
