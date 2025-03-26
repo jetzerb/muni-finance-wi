@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+file="Time_Series_MCD_2024.xlsx";
+
+cat <<EOF | duckdb "$ddbFile"
+/*
+	Population data
+	A = Municipality Type
+	B = Municipality Name
+	C = County
+	D = MuniCode
+	E = FIPS State / County / Locality Code
+
+-- Note: column after Z is somehow BA instead of AA
+-- 197x,198x,199x,200x,201x,202x
+	 ,N, Y,BJ,BU,CF = yyy0 Jan 1 estimate
+	F,O, Z,BK,BV,CG = yyy0 Census
+	  P,BA,BL,BW,CH = yyy1 Jan 1 estimate
+	  Q,BB,BM,BX,CI = yyy2 Jan 1 estimate
+	G,R,BC,BN,BY,CJ = yyy3 Jan 1 estimate
+	H,S,BD,BO,BZ,CK = yyy4 Jan 1 estimate
+	I,T,BE,BP,CA    = yyy5 Jan 1 estimate
+	J,U,BF,BQ,CB    = yyy6 Jan 1 estimate
+	K,V,BG,BR,CC    = yyy7 Jan 1 estimate
+	L,W,BH,BS,CD    = yyy8 Jan 1 estimate
+	M,X,BI,BT,CE    = yyy9 Jan 1 estimate
+*/
+truncate table Municipality;
+insert into Municipality
+	select
+		 cnv.MuniCode
+		,cnv.DoaCode
+		,E FIPS
+		,C County
+		,cast(case A when 'C' then 'City' when 'T' then 'Town' when 'V' then 'Village' end as varchar(10)) MuniType
+		,trim(replace(B,' *','')) MuniName
+	from read_xlsx('$file',range = 'A6:BK')
+	    ,lateral (
+		select
+			 cnv.DoaCode
+			,case
+				when cnv.DoaCode like '40%' then cast(num.id + 32000 as char(5)) -- move Menominee county from 40 to 72
+				when cnv.DoaCode    > '41'  then cast(num.id -  1000 as char(5)) -- shift all counties 41 & up down by 1
+				else                             cnv.DoaCode
+			end MuniCode
+		from (values (regexp_replace(D,'\D','','g'))) cnv(DoaCode)
+		    ,lateral (values (cast(cnv.DoaCode as int))) num(id)
+	     ) cnv
+	where D is not null
+;
+
+-- Create entries for the counties
+insert into Municipality
+	select distinct
+		 concat(left(MuniCode,2),'999')
+		,concat(left(DoaCode ,2),'999')
+		,left(FIPS,5)
+		,County
+		,'County'
+		,County
+	from Municipality
+;
+
+truncate table MuniPop;
+insert into MuniPop
+	select
+		 mun.MuniCode
+		,vert.yr,vert.pop,vert.isCensus
+from read_xlsx('$file',range = 'A6:BK') pop
+     join Municipality mun on mun.DoaCode = regexp_replace(D,'\D','','g')
+     ,lateral (values
+	 (1970,pop. F,1)
+	,(1973,pop. G,0)
+	,(1974,pop. H,0)
+	,(1975,pop. I,0)
+	,(1976,pop. J,0)
+	,(1977,pop. K,0)
+	,(1978,pop. L,0)
+	,(1979,pop. M,0)
+	,(1980,pop. N,0)
+	,(1980,pop. O,1)
+	,(1981,pop. P,0)
+	,(1982,pop. Q,0)
+	,(1983,pop. R,0)
+	,(1984,pop. S,0)
+	,(1985,pop. T,0)
+	,(1986,pop. U,0)
+	,(1987,pop. V,0)
+	,(1988,pop. W,0)
+	,(1989,pop. X,0)
+	,(1990,pop. Y,0)
+	,(1990,pop. Z,1)
+	,(1991,pop.BA,0)
+	,(1992,pop.BB,0)
+	,(1993,pop.BC,0)
+	,(1994,pop.BD,0)
+	,(1995,pop.BE,0)
+	,(1996,pop.BF,0)
+	,(1997,pop.BG,0)
+	,(1998,pop.BH,0)
+	,(1999,pop.BI,0)
+	,(2000,pop.BJ,0)
+	,(2000,pop.BK,1)
+	,(2001,pop.BL,0)
+	,(2002,pop.BM,0)
+	,(2003,pop.BN,0)
+	,(2004,pop.BO,0)
+	,(2005,pop.BP,0)
+	,(2006,pop.BQ,0)
+	,(2007,pop.BR,0)
+	,(2008,pop.BS,0)
+	,(2009,pop.BT,0)
+	,(2010,pop.BU,0)
+	,(2010,pop.BV,1)
+	,(2011,pop.BW,0)
+	,(2012,pop.BX,0)
+	,(2013,pop."BY",0)
+	,(2014,pop.BZ,0)
+	,(2015,pop.CA,0)
+	,(2016,pop.CB,0)
+	,(2017,pop.CC,0)
+	,(2018,pop.CD,0)
+	,(2019,pop.CE,0)
+	,(2020,pop.CF,0)
+	,(2020,pop.CG,1)
+	,(2021,pop.CH,0)
+	,(2022,pop.CI,0)
+	,(2023,pop.CJ,0)
+	,(2024,pop.CK,0)
+      ) vert(yr,pop,isCensus)
+;
+EOF

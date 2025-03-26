@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+#
+# Download municipality population estimates for
+# all wisconsin municipalities.
+#
+
+file="Time_Series_MCD_2024.xlsx";
+wget -qO "$file" "https://doa.wi.gov/DIR/$file";

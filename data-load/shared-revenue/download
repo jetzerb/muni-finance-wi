@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+#
+# Download files holding shared revenue disbursed to
+# all wisconsin municipalities.
+# Source: https://www.revenue.wi.gov/pages/report/shared-revenue-estimates.aspx
+# NOTE: Excel available for 2020 onward.  Only PDF available for 2019
+#
+
+for yr in $(seq 2020 2024)
+do
+	file="shrderp${yr}.xlsx";
+	echo "Downloading file $file";
+	wget -qO "$file" "https://www.revenue.wi.gov/slfreportscotvc/$file";
+done;

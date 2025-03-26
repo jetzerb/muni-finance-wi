@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+for year in $(seq 2009 2023)
+do
+	yr=$((year % 100 +  1));
+	sourceFile="munagi${yr}.xlsx";
+	echo "loading year $year from file $sourceFile";
+	cat <<EOF | duckdb "$ddbFile"
+/*
+	Income Tax Return Info
+
+	A = CO/MUN CODE
+	B = COUNTY NAME
+	C = MUNICIPALITY NAME
+	D = MUNICIPALITY TYPE
+	E = POPULATION
+	F = RETURNS
+	G = ADJUSTED GROSS TOTAL
+	H = ADJUSTED GROSS AVERAGE
+	I = ADJUSTED GROSS MEDIAN
+	J = NET PLUS TOTAL
+	K = NET PLUS AVERAGE
+	L = NET PLUS MEDIAN
+
+*/
+delete from MuniAgi where Year = $year;
+insert into MuniAgi
+	select regexp_replace(A,'\D','','g')
+	      ,$year
+	      ,B
+	      ,coalesce(nullif(C,''),B) -- county names are blank on the county total lines
+	      ,D,E,F,G,H,I,J,K,L
+	from read_xlsx('$sourceFile',range = 'A4:L')
+	where regexp_matches(A,'^\d\d')
+;
+EOF
+done;

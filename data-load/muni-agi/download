@@ -1,0 +1,64 @@
+#!/usr/bin/bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+#
+# Download Excel files holding information on tax returns for
+# all wisconsin municipalities.
+# Source: https://www.revenue.wi.gov/Pages/Report/WI-Muni-AGI.aspx
+#
+
+# NOTE: xls to xlsx switch occurred in 2017
+for yr in $(seq 10 24)
+do
+	file="munagi${yr}.xls";
+	[ "$yr" -ge 17 ] && file="${file}x";
+	echo "Downloading file $file";
+	wget -qO "$file" "https://www.revenue.wi.gov/DORReports/$file";
+done;
+
+cat <<EOF
+--------------------------------------------------------------------------------
+Manual Labor Required
+1) munagi10 - munagi16 are xls and can't be read by duckdb.  You can use an
+   [online service](like https://www.freeconvert.com/xls-to-xlsx) to convert
+   them to xlsx
+
+2) munagi10 - munagi12 can't be directly read because each county is in its own
+   section in the spreadsheet, and duckdb is expecting consistent datatypes on
+   all rows.  Copy all the data into a text file, remove all rows that don't
+   start with two numbers followed by a dash, and paste back into the
+   the spreadsheet under the first header.  Remove all lines below the pasted
+   block.
+
+3) munagi10 - munagi14 have different column layout.  Re-arrange them to match
+   the pattern found in files starting with munagi15.
+
+     A: CO/MUN CODE                              A: CO/MUN CODE
+     B: COUNTY NAME                              B: COUNTY NAME
+     C: MUNICIPALITY NAME                        C: MUNICIPALITY NAME
+     D: MUNICIPALITY TYPE                        D: MUNICIPALITY TYPE
+     E: POPULATION                               E: POPULATION
+     F: RETURNS                                  F: RETURNS
+     G: ADJUSTED GROSS INCOME                    G: AGI_TOTAL
+
+     The rest of the columns should be           H: AGI_AVERAGE
+     re-arranged to match the layout             I: AGI_MEDIAN
+     on the right.  Note that columns I & L      J: NET_TOTAL
+     will remain empty because median            K: NET_AVERAGE
+     values are not present.                     L: NET_MEDIAN
+
+4) In several spreadsheets, you need to delete all rows below the last row
+   of data, or duckdb will throw an error like
+      read_xlsx: Failed to parse cell 'F1994':
+      Could not convert string ' ' to DOUBLE
+   When you load the spreadsheet, hit CTRL+END to jump to the last cell in
+   the sheet.  If it lands below the last line of data, delete those rows so
+   that CTRL+END takes you to the last column of the last row holding data.
+
+5) munagi22 has a row with a #DIV/0! error because of lack of data. Fill in
+   all zeros for that line, or delete the row.
+
+6) muniagi23 has a row with asterisks (*) where numbers should be.  Fill in
+   all zeros for that line or delete the row.
+EOF
