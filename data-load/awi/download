@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+#
+# Download nation-wide Average Wage Index data
+#
+
+file="awi.html";
+wget -qO "$file" "https://www.ssa.gov/OACT/COLA/central.html";
+
+# Luckily, they've made this file easy to parse
+awk '
+/^<td align="left"/ {
+	sub(/<td[^>]+>/,"");
+	sub(/<.*/,"");
+	year = $0;
+	printf("%s",year);
+}
+year && /<td/ {
+	gsub(/[$,%]/,"");
+	gsub(/NA/,"");
+	gsub(/ *class=[^>]+>/,">");
+	gsub(/<\/td> *<td>/,",");
+	sub(/<\/td>.*/,"");
+	sub(/<td>/,",");
+	printf("%s\n",$0);
+}
+' "$file" > "${file/html/csv}";

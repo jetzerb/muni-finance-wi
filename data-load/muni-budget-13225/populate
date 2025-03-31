@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+file="budget.tsv";
+if [ ! -f "$file" ]
+then
+	cat <<EOF
+File "$file" doesn't exist.
+Compile data from the budget documents from 2008 onward, available at
+  - https://fitchburgwi.gov/2234/Past-Budgets
+  - https://fitchburgwi.gov/1998/Financial-Records-Reports
+
+Make data columns as follows:
+     0    A  Budget Year
+     1    B  Levy Revenue Page
+     2    C  General levy
+     3    D  FACTv levy
+     4    E  Transit levy
+     5    F  Library levy
+     6    G  Debt levy
+     7    H  Capital levy
+     8    I  TID Alloc levy
+     9    J  City Total levy
+    10    K  Madison school levy
+    11    L  Oregon school levy
+    12    M  Verona school levy
+    13    N  MATC levy
+    14    O  Dane county levy
+    15    P  State Forest levy
+    16    Q  Grand Total levy
+    17    R  Assessed Value Page
+    18    S  Assessed Value for the city (need to look at next year's budget to get this year's value)
+    19    T  Equalized Value for the city (need to look at next year's budget to get this year's value)
+    20    U  Assessed / Equalized ratio
+    21    V  Single Family Home Data Page
+    22    W  SFH Assessed Amount (be careful of the disconnect between 2015 and 2016)
+    23    X  SFH Tax
+    24    Y  Multi-Family Assessed Amount
+    25    Z  MF Tax
+
+Copy from the spreadsheet including 1 header line into a text file with tab delimiter and save.
+EOF
+fi;
+
+code="$(readlink -f -- "$0";)";
+code=${code%/*};
+code=${code##*-};
+
+awk '
+# skip header and rely on column order instead of names
+FNR == 1 {next;}
+
+/[,$]/ {
+	gsub(/[,$]/,"");
+	gsub(/#DIV\/0!/,"");
+	print;
+}' "$file" |
+duckdb "$ddbFile" "
+delete from MuniBudget where MuniCode = $code;
+insert into MuniBudget
+	select
+		 MuniCode          : $code
+		,Year              : column00
+		,LevyGeneral       : column02
+		,LevyTransit       : column04
+		,LevyLibrary       : column05
+		,LevyDebt          : column06
+		,LevyCapital       : column07
+		,LevyTID           : column08
+		,LevyCityOther     : column03    -- FACTv
+
+		,LevySchool1       : column10
+		,LevySchool2       : column11
+		,LevySchool3       : column12
+		,LevyTechCollege   : column13
+		,LevyCounty        : column14
+		,LevyOverlyingOther: column15    -- State Forest
+
+		,AssessedValue     : column18
+		,EqualizedValue    : column19
+		,MedianSFAssessed  : column22
+		,MedianMFAssessed  : column23
+		,MedianSFTax       : column24
+		,MedianMFTax       : column25
+	from read_csv('/dev/stdin')
+";

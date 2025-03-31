@@ -20,5 +20,13 @@ create table MuniBudget
 	,LevyCounty         decimal(17,2)
 	,LevyOverlyingOther decimal(17,2)
 
+	-- Valuation and per unit stats
+	,AssessedValue      decimal(17,2)
+	,EqualizedValue     decimal(17,2)
+	,MedianSFAssessed   decimal(17,2)
+	,MedianMFAssessed   decimal(17,2)
+	,MedianSFTax        decimal(17,2)
+	,MedianMFTax        decimal(17,2)
+
 	,constraint MuniBudget_PK primary key (MuniCode,Year)
 );

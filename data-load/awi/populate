@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+file="awi.csv";
+
+cat <<EOF | duckdb "$ddbFile"
+truncate table AWI;
+insert into AWI
+	select column0, column1, column4
+	from "$file"
+;
+EOF

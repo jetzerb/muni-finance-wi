@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+#
+# Download municipality population estimates for
+# all wisconsin municipalities.
+#
+
+file="cpi.html";
+wget -qO "$file" "https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/";
+
+# Luckily, they've made this file easy to parse
+awk '
+/^<tr>$/ {delete field; idx=0;}
+
+/^<td align="center"/ {
+	if ($0 ~ /Avail/) {$0 = "";}
+	sub(/<\/.*$/,"");
+	sub(/.*>/,"");
+	field[idx++] = (length($0) < 2 || $0 ~ /nbsp/) ? "" : $0;
+}
+
+/^<\/tr>/ {
+	for (i = 0; i < idx; i++) {
+		printf("%s%s",field[i],i < idx - 1 ? "," : "\n");
+	}
+}
+' "$file" > "${file/html/csv}";

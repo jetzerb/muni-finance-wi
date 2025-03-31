@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+file="cpi.csv";
+
+cat <<EOF | duckdb "$ddbFile"
+truncate table CPI;
+insert into CPI
+	select *
+	from "$file"
+;
+EOF
