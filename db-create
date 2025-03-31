@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+db="muni-finance-wi";
+script="create-database.sql";
+
+cd "$db";
+duckdb ../"${db}.ddb" < "$script";
