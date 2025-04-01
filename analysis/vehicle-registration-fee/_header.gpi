@@ -1,0 +1,52 @@
+# Set terminal and output file
+set terminal pdfcairo size 11, 8.5 font "Arial,32" linewidth 5;
+set pointsize 1.5;
+set output "FILENAME.pdf"
+
+# define my colors
+# Note: these should be OK for color blind people (Okabe and Ito)
+colorSFH    = "#56b4e9"; # blue
+colorPerCap = "#cc79a7"; # pink/purple
+colorIncome = "#e69f00"; # orange
+colorMin    = "#009e73"; # green
+
+# define line style indices
+lsSFH    = 1;
+lsPerCap = 2;
+lsIncome = 3;
+lsMin    = 4;
+
+# define data columns
+colYear                    =  1;
+colDecCPI                  =  2;
+colInflAdjNatlMedianWage   =  3;
+colInflAdjLocalMedianWage  =  4;
+colPopulation              =  5;
+colMedianSFTax             =  6;
+colInflAdjMedSFTax         =  7;
+colMedianMFTax             =  8;
+colInflAdjMedMFTax         =  9;
+colLevyCityTotal           = 10;
+colLevyOverlyingTotal      = 11;
+colLevyGrandTotal          = 12;
+colLevyCityPct             = 13;
+colInflAdjCityPerCapita    = 14;
+colInflAdjCityPerCapitaVRF = 15;
+
+
+MINCOL
+
+# Read data from file
+set datafile separator "\t";
+taxfile = "financial-data.txt";
+
+# Calculate the minimum value of the second column
+stats taxfile using ($1 > 2010 && column(minCol) > 0 ? column(minCol) : 1/0) nooutput;
+min_since_library = STATS_min;
+
+# Define styles for the series
+set style line lsSFH    linecolor rgb colorSFH    pointtype  7 linetype 1;  # Circles with lines
+set style line lsPerCap linecolor rgb colorPerCap pointtype  5 linetype 1;  # Squares with lines
+set style line lsIncome linecolor rgb colorIncome pointtype 13 linetype 1;  # Diamonds with lines
+set style line lsMin    linecolor rgb colorMin                 linetype 1;  # Lines only
+#--------------------------------------------------------------------------------

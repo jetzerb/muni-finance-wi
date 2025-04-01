@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+
+duckdb "$ddbFile" <property-tax-data.sql |
+sed 's/NULL//g;' > financial-data.txt;
+
+
+for file in [a-zA-Z]*.gpi
+do
+	pdf=${file/.gpi/};
+	echo "generating $pdf from $file";
+	minCol=$(head -1 "$file");
+	(
+		sed "
+			s/FILENAME/$pdf/g;
+			s/MINCOL/$minCol/;
+		" _header.gpi;
+		cat "$file";
+	) | tee /tmp/"$file" | gnuplot;
+done;
