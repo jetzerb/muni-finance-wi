@@ -1,0 +1,105 @@
+#!/usr/bin/awk -f
+
+BEGIN {
+	fmt = "xxxx";
+	gsub(/x/,"%s\t",fmt);
+}
+
+# Normally the municipality is introduced like this:
+#	County  99 County Name
+#	City    999 City Name
+#
+# but some municipalities span counties.  Those show up in each county with
+# the same dollar amounts, as well as within each county like this, again
+# with the same dollar amounts:
+#	CITY OF CITY NAME   999               999              999
+#	County               99 County Name   99 County Name   99 County Name
+#
+/ OF / && NF >= 5 && $NF+0 == $NF &&  $(NF-1)+0 == $(NF-1) || /COUNTY .*[a-z].* TOTALS/ {skip = 1; next;}
+
+/\f/ && skip {skip = 0; next;}
+
+skip {next;}
+
+/^\s*Area\s+[0-9]+\s/ {exit;}
+
+/^\s*County/ {
+	delete line;
+	idx  =  0;
+
+	if (/COUNTY TOTALS/) {
+		sub(/ *COUNTY TOTALS.*/,"");
+		isCounty = 1;
+	}
+	else {isCounty = 0;}
+
+	line[idx++] = "MuniCode";
+	line[idx++] = $2; # muniCode
+
+	line[idx++] = "CountyName";
+	$1 = $2 = "";
+	sub(/^\s*/,"");
+	sub(/\s*$/,"");
+	line[idx++] = $0;
+
+	line[idx++] = "MuniType";
+
+	if (isCounty) {
+		line[idx++] = "County";
+		line[idx++] = "MuniName";
+		line[idx++] = $0;
+	}
+	else {
+		getline;
+
+		line[idx++] = $1;
+
+		line[1]     = line[1] $2;
+
+		line[idx++] = "MuniName";
+		$1 = $2 = "";
+		sub(/^\s*/,"");
+		sub(/\s*$/,"");
+		line[idx++] = $0;
+	}
+
+	type = "";
+}
+
+# Skip "Totals" sections
+$1 == "Total" {type = ""; next;}
+
+# Only a couple fields means it's a header
+NF < 5 {gsub(/\s/,""); type = $0; next;}
+
+/PERSONAL PROPERTY/ {type = "Personal"; *****}
+
+# collect data
+NF > 10 && type && $(NF-2) ~ /^[0-9]/ {
+	subType = $1;
+	gsub(/\//,"",subType);
+
+	value   = $(NF-2);
+	gsub(/[$,]/,"",value);
+
+	line[idx++] = type subType;
+	line[idx++] = value;
+}
+
+# Form Feed encountered; dump the accumulated data
+/\f/ && !hdr {
+	delim = "\t";
+	for (i = 0; i < idx; i += 2) {
+		if (i == idx - 2) {delim = "\n";}
+		printf("%s%s",line[i],delim);
+	}
+	hdr = 1;
+}
+
+/\f/ {
+	delim = "\t";
+	for (i = 1; i < idx; i += 2) {
+		if (i == idx - 1) {delim = "\n";}
+		printf("%s%s",line[i],delim);
+	}
+}

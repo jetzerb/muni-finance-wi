@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+#
+# Download files holding shared revenue disbursed to
+# all wisconsin municipalities.
+# Source: https://www.revenue.wi.gov/Pages/Report/soc-eqv.aspx
+#
+# NOTE: 1999-2014 data is available but only interactive form where you
+# have to choose a county and then a municipality and then a year and it
+# will present what amounts to one page of the PDFs that are available
+# for years 2015 onward.
+#
+
+for yr in $(seq 2015 2024)
+do
+	file="${yr}socstatewidef.pdf";
+	[ -f "$file" ] && continue;
+	echo "Downloading file $file";
+	wget -qO "$file" "https://www.revenue.wi.gov/slfreportsassessor/$file" || true;
+done;
+
+for file in *.pdf
+do
+	txt=${file/pdf/txt};
+	[ -f "$txt" ] && rm "$txt";
+	echo "Extracting text from $file";
+	pdftotext -layout "$file";
+done;

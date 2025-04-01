@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+for year in $(seq 2020 2024)
+do
+	sourceFile="shrderp${year}.xlsx";
+	echo "loading year $year from file $sourceFile";
+	cat <<EOF | duckdb "$ddbFile"
+/*
+	Shared Revenue
+	A = Comuni Code
+	B = Municipality
+	C = County and Municipal Aid
+	D = Supplemental County and Municipal Aid
+	E = Utility Aid
+	F = Expenditure Restraint Incentive Program Aid
+	G = Total Shared Revenue
+	H = July Payment
+	I = Revised Estimate Before Recast
+	J = Prior Year Recast Correction
+	K = Final Revised Estimate
+*/
+delete from SharedRevenue where Year = $year;
+insert into SharedRevenue
+	select regexp_replace(A,'\D','','g')
+	      ,$year
+	      ,B,C,D,E,F,G,H,I,J,K
+	from read_xlsx('$sourceFile',range = 'A6:K')
+	where regexp_matches(A,'^\d\d')
+;
+EOF
+done;
