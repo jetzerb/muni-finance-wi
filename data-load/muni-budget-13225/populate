@@ -92,8 +92,8 @@ insert into MuniBudget
 		,AssessedValue     : column18
 		,EqualizedValue    : column19
 		,MedianSFAssessed  : column22
-		,MedianMFAssessed  : column23
-		,MedianSFTax       : column24
+		,MedianMFAssessed  : column24
+		,MedianSFTax       : column23
 		,MedianMFTax       : column25
 	from read_csv('/dev/stdin')
 ";

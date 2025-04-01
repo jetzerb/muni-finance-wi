@@ -5,8 +5,7 @@ create or replace view MuniBudget_View
 as
 select
 	 *
-	,cnv.*
-	,cnv.LevyCityTotal + cnv.LevyOverlyingTotal as LevyGrandTotal
+	,LevyGrandTotal: cnv.LevyCityTotal + cnv.LevyOverlyingTotal
 
 from
 	 MuniBudget
