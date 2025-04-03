@@ -1,0 +1,21 @@
+minCol = colLevyCityPct;
+2008  # minimum year I care about
+
+
+# Set labels and titles
+set xlabel  "Year";
+set ylabel  "% of Levy going to the City" textcolor rgb colorCity;
+set title   "City Portion of Total Levy";
+
+set grid;
+
+set key inside top left;
+
+
+# Plot the data
+plot dataFile using colYear:colLevyCityPct title "City % of Total Levy"                     with linespoints linestyle lsCity, \
+     ""       using colYear:colLevyCityPct:(column(colYear) == 2011 ? "Library"       : "") with labels offset -3, 1 notitle, \
+     ""       using colYear:colLevyCityPct:(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -2,-4 rotate by 90 notitle, \
+     ""       using colYear:(column(colYear) == 2025 ? column(colLevyCityPctVRF) : 1/0) \
+                                                                title "VRF Effect"          with points      linestyle lsCity pointsize 2, \
+     min_since_library                                          title "Min Since Library"   with lines       linestyle lsMin;

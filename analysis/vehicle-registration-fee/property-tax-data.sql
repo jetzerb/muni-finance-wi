@@ -2,31 +2,40 @@
 
 select
 	 bud.Year
-	,DecCPI                 :      cnv.Dec               
-	,InflAdjNatlMedianWage  : cast(cnv.AwiMedian   * cnv.Inflation as bigint)
+	,DecCPI                     :      cln.Dec
+	,InflAdjNatlMedianWage      : cast(cln.AwiMedian   * cln.Inflation as bigint)
 
-	,InflAdjLocalMedianWage : cast(cnv.AgiMedian   * cnv.Inflation as bigint)
+	,InflAdjLocalMedianWage     : cast(cln.AgiMedian   * cln.Inflation as bigint)
 	,pop.Population
+	,bud.AssessedValue
+	,bud.EqualizedValue
 
-	,MedianSFTax            :      cnv.MedianSFTax
-	,InflAdjMedSFTax        : cast(cnv.MedianSFTax * cnv.Inflation as bigint)
+	,MedianSFAssessed           :      cln.MedianSFAssessed
+	,MedianSFTax                :      cln.MedianSFTax
+	,InflAdjMedSFTax            : cast(cln.MedianSFTax * cln.Inflation as bigint)
 
-	,MedianMFTax            :      cnv.MedianMFTax
-	,InflAdjMedMFTax        : cast(cnv.MedianMFTax * cnv.Inflation as bigint)
+	,MedianMFAssessed           :      cln.MedianMFAssessed
+	,MedianMFTax                :      cln.MedianMFTax
+	,InflAdjMedMFTax            : cast(cln.MedianMFTax * cln.Inflation as bigint)
 
-	,LevyCityTotal          :      cnv.LevyCityTotal
-	,LevyOverlyingTotal     :      cnv.LevyOverlyingTotal
-	,LevyGrandTotal         :      cnv.LevyGrandTotal
-	,LevyCityPct            : cast(cnv.LevyCityTotal * 100 / cnv.LevyGrandTotal as decimal(6,3))
+	,LevyCityTotal              :      cln.LevyCityTotal
+	,LevyOverlyingTotal         :      cln.LevyOverlyingTotal
+	,LevyGrandTotal             :      cln.LevyGrandTotal
+	,LevyCityPct                : cast( cln.LevyCityTotal        * 100 / cln.LevyGrandTotal as decimal(6,3))
+	,LevyCityPctVRF             : cast((cln.LevyCityTotal + 1e6) * 100 / cln.LevyGrandTotal as decimal(6,3))
 
-	,InflAdjCityPerCapita   : cast(per.CityPerCap    * cnv.Inflation as bigint)
-	,InflAdjCityPerCapitaVRF: cast(per.CityPerCapVRF * cnv.Inflation as bigint)
+	,InflAdjCityPerCapita       : cast(cnv.CityPerCap    * cln.Inflation as bigint)
+	,InflAdjCityPerCapitaVRF    : cast(cnv.CityPerCapVRF * cln.Inflation as bigint)
 
-	,SFTaxToNatlMedianWage  : cast(cnv.MedianSFTax   * 100 / cnv.AwiMedian as decimal(6,3))
-	,SFTaxToLocalMedianWage : cast(cnv.MedianSFTax   * 100 / cnv.AgiMedian as decimal(6,3))
+	,SFTaxToNatlMedianWage      : cast(cln.MedianSFTax    * 100 / cln.AwiMedian as decimal(6,3))
+	,SFTaxToNatlMedianWageVRF   : cast(cnv.MedianSFTaxVRF * 100 / cln.AwiMedian as decimal(6,3))
+	,SFTaxToLocalMedianWage     : cast(cln.MedianSFTax    * 100 / cln.AgiMedian as decimal(6,3))
+	,SFTaxToLocalMedianWageVRF  : cast(cnv.MedianSFTaxVRF * 100 / cln.AgiMedian as decimal(6,3))
 
-	,PerCapToNatlMedianWage : cast(per.CityPerCap    * 100 / cnv.AwiMedian as decimal(6,3))
-	,PerCapToLocalMedianWage: cast(per.CityPerCapVRF * 100 / cnv.AgiMedian as decimal(6,3))
+	,PerCapToNatlMedianWage     : cast(cnv.CityPerCap     * 100 / cln.AwiMedian as decimal(6,3))
+	,PerCapToNatlMedianWageVRF  : cast(cnv.CityPerCapVRF  * 100 / cln.AwiMedian as decimal(6,3))
+	,PerCapToLocalMedianWage    : cast(cnv.CityPerCap     * 100 / cln.AgiMedian as decimal(6,3))
+	,PerCapToLocalMedianWageVRF : cast(cnv.CityPerCapVRF  * 100 / cln.AgiMedian as decimal(6,3))
 
 from           MuniBudget_View    bud
      left join CPI                cpi on cpi.Year = bud.Year
@@ -40,19 +49,22 @@ from           MuniBudget_View    bud
 		 Dec               :      nullif(cpi.Dec               ,0)
 		,AwiMedian         : cast(nullif(awi.AwiMedian         ,0) as bigint)
 		,AgiMedian         : cast(nullif(agi.AgiMedian         ,0) as bigint)
+		,MedianSFAssessed  : cast(nullif(bud.MedianSFAssessed  ,0) as bigint)
 		,MedianSFTax       : cast(nullif(bud.MedianSFTax       ,0) as bigint)
+		,MedianMFAssessed  : cast(nullif(bud.MedianMFAssessed  ,0) as bigint)
 		,MedianMFTax       : cast(nullif(bud.MedianMFTax       ,0) as bigint)
 		,LevyCityTotal     : cast(nullif(bud.LevyCityTotal     ,0) as bigint)
 		,OperatingTotal    : cast(nullif(bud.OperatingTotal    ,0) as bigint)
 		,LevyOverlyingTotal: cast(nullif(bud.LevyOverlyingTotal,0) as bigint)
 		,LevyGrandTotal    : cast(nullif(bud.LevyGrandTotal    ,0) as bigint)
 		,Inflation         : cur.Dec / cpi.Dec
-     ) cnv
+     ) cln
     ,lateral (
 	select
-		 CityPerCap   :  cnv.OperatingTotal        / pop.Population
-		,CityPerCapVRF: (cnv.OperatingTotal + 1e6) / pop.Population
-     ) per
+		 CityPerCap     :  cln.OperatingTotal        / pop.Population
+		,CityPerCapVRF  : (cln.OperatingTotal + 1e6) / pop.Population
+		,MedianSFTaxVRF : cln.MedianSFTax + 40*2
+     ) cnv
 
 where bud.MuniCode = 13225 -- Fitchburg
 order by bud.Year

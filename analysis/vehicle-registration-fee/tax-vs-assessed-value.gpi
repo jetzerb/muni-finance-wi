@@ -1,0 +1,22 @@
+minCol = colInflAdjMedSFTax; # dummy value; not displaying minimum here
+
+
+# Set labels and titles
+set xlabel  "Year";
+set ylabel  "Median SFH Assessed Value" textcolor rgb colorCity;
+set y2label "Median SFH Tax"            textcolor rgb colorSFH;
+set title   "Property Tax and Assessed Value";
+
+# Enable secondary y-axis
+set y2tics;
+set ytics nomirror;
+set grid;
+
+set key inside top left;
+
+set yrange[0:];
+set y2range[0:];
+
+# Plot the data
+plot dataFile using colYear:colMedianSFAssessed             title "Assessed"     with linespoints linestyle lsCity, \
+     ""       using colYear:colMedianSFTax      axes x1y2   title "Property Tax" with linespoints linestyle lsSFH;

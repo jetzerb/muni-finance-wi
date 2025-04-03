@@ -20,4 +20,8 @@ set key off;
 plot dataFile using colYear:colSFTaxToNatlMedianWage              title "SFH Percentage"              with linespoints linestyle lsSFH, \
      ""       using colYear:colSFTaxToNatlMedianWage:(column(colYear) == 2011 ? "Library"       : "") with labels offset -3, 1 notitle, \
      ""       using colYear:colSFTaxToNatlMedianWage:(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -2,-1 rotate by 90 notitle, \
-     ""       using colYear:colPerCapToNatlMedianWage axes x1y2   title "Per Capita Percentage"       with linespoints linestyle lsPerCap;
+     ""       using colYear:(column(colYear) == 2023 ? column(colSFTaxToNatlMedianWageVRF) : 1/0) \
+                                                                  title "SFH 2 Car VRF Effect"        with points      linestyle lsPointSFH, \
+     ""       using colYear:colPerCapToNatlMedianWage axes x1y2   title "Per Capita Percentage"       with linespoints linestyle lsPerCap, \
+     ""       using colYear:(column(colYear) == 2023 ? column(colPerCapToNatlMedianWageVRF) : 1/0) axes x1y2 \
+                                                                  title "Per Capita VRF Effect"       with points      linestyle lsPointPerCap;

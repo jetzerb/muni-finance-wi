@@ -5,7 +5,7 @@ minCol = colInflAdjMedSFTax; # Inflation Adjusted SFH Property Tax
 # Set labels and titles
 set xlabel  "Year";
 set ylabel  "SFH Tax in 2024 Dollars"                           textcolor rgb colorSFH;
-set y2label "Fitchburg Median Household Income in 2024 Dollars" textcolor rgb colorIncLoc;
+set y2label "Fitchburg Median Household Income in 2024 Dollars" textcolor rgb colorIncome;
 set title   "SFH Tax Buying Power";
 
 # Enable secondary y-axis
@@ -21,6 +21,6 @@ plot dataFile using colYear:colInflAdjMedSFTax                  title "SFH Tax" 
      ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2011 ? "Library"       : "") with labels offset  0,-2 rotate by 90 notitle, \
      ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -3,-2 rotate by 75 notitle, \
      ""       using colYear:(column(colYear) == 2024 ? column(colInflAdjMedSFTax)+80 : 1/0) \
-                                                                title "2 Car VRF Effect"        with points      linestyle lsPoint, \
-     ""       using colYear:colInflAdjLocalMedianWage axes x1y2 title "Fitchburg Median Income" with linespoints linestyle lsIncLoc, \
+                                                                title "2 Car VRF Effect"        with points      linestyle lsPointSFH, \
+     ""       using colYear:colInflAdjLocalMedianWage axes x1y2 title "Fitchburg Median Income" with linespoints linestyle lsIncome, \
      min_since_library                                          title "Min Since Library"       with lines       linestyle lsMin;

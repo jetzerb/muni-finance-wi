@@ -19,4 +19,8 @@ set xrange[2012:]; # only data from 2014 onward, but give graph some padding
 
 # Plot the data
 plot dataFile using colYear:colSFTaxToLocalMedianWage              title "SFH Percentage"              with linespoints linestyle lsSFH, \
-     ""       using colYear:colPerCapToLocalMedianWage axes x1y2   title "Per Capita Percentage"       with linespoints linestyle lsPerCap;
+     ""       using colYear:(column(colYear) == 2023 ? column(colSFTaxToLocalMedianWageVRF) : 1/0) \
+                                                                   title "SFH 2 Car VRF Effect"        with points      linestyle lsPointSFH, \
+     ""       using colYear:colPerCapToLocalMedianWage axes x1y2   title "Per Capita Percentage"       with linespoints linestyle lsPerCap, \
+     ""       using colYear:(column(colYear) == 2023 ? column(colPerCapToLocalMedianWageVRF) : 1/0) axes x1y2 \
+                                                                  title "Per Capita VRF Effect"       with points      linestyle lsPointPerCap;
