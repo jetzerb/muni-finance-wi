@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+# Compile all the individual plots into a single multi-page PDF
+# in a specific order
+
+pdfunite \
+	vehicle-registration-fee/sfh-tax-awi.pdf \
+	vehicle-registration-fee/sfh-tax-local.pdf \
+	vehicle-registration-fee/percap-budget-awi.pdf \
+	vehicle-registration-fee/percap-budget-local.pdf \
+	vehicle-registration-fee/tax-as-pct-of-awi.pdf \
+	vehicle-registration-fee/tax-as-pct-of-local.pdf \
+	vehicle-registration-fee/city-portion.pdf \
+	vehicle-registration-fee/tax-vs-assessed-value.pdf \
+	shared-revenue/shared-revenue.pdf \
+	shared-revenue/shared-revenue-zoom.pdf \
+	vrf-property-tax-slides.pdf;
