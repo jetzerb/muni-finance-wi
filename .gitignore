@@ -17,3 +17,7 @@
 *.csv
 *.pdf
 *.txt
+*.html
+
+# backups
+*.orig
