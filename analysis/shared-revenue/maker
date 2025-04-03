@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+
+ddbDir="$PWD";
+ddbFile="";
+while [ ! -f "$ddbDir"/*.ddb ]
+do
+	ddbDir=${ddbDir%/*};
+done;
+for ddbFile in "$ddbDir"/*.ddb
+do
+	[ -f "$ddbFile" ] && break;
+done;
+
+
+datafile="financial-data.txt";
+duckdb "$ddbFile" <shared-revenue-data.sql |
+sed 's/NULL//g;' > "$datafile";
+
+
+for file in [a-zA-Z]*.gpi
+do
+	for range in "" "set xrange[:100]; set yrange[:800]"
+	do
+		base=${file/.gpi/};
+		if [ -n "$range" ]
+		then
+			base="${base}-zoom";
+			which="Most";
+		else
+			which="All";
+		fi;
+		echo "generating $base from $file";
+		(
+			sed "
+				s/FILENAME/$base/g;
+				s/RANGE/$range/g;
+				s/WHICH/$which/g;
+			" "$file"
+		) | tee /tmp/"$file" | gnuplot;
+	done;
+done;

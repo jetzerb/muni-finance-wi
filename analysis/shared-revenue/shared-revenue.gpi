@@ -1,0 +1,48 @@
+# Set terminal and output file
+set terminal pdfcairo size 11, 8.5 font "Arial,32" linewidth 5;
+set key font ",24";
+set output "FILENAME.pdf"
+
+# define my colors
+# Note: these should be OK for color blind people (Okabe and Ito)
+colorFitchburg   = "#e69f00"; # orange
+colorOther       = "#000000"; # black
+
+# define line style indices
+i = 1;
+lsFitchburg  = i; i = i + 1;
+lsOther      = i; i = i + 1;
+
+# define data columns
+i = 1;
+colMuniCode           = i; i = i + 1;
+colPriorYearMedianAgi = i; i = i + 1;
+colPerCapita          = i; i = i + 1;
+colMuniName           = i; i = i + 1;
+
+
+# Read data from file
+set datafile separator "\t";
+dataFile = "financial-data.txt";
+
+# Define styles for the series
+set style line lsFitchburg linecolor rgb colorFitchburg pointtype 13 pointsize 2   ; # Diamonds
+set style line lsOther     linecolor rgb colorOther     pointtype  7 pointsize 0.25; # Circles
+
+set grid;
+
+# Set labels and titles
+set xlabel  "Median Adjusted Gross Income (Thousands)";
+set ylabel  "Per-Capita Shared Revenue";
+set title   "2024 Shared Revenue For WHICH Municipalities";
+
+RANGE
+
+# Plot the data
+plot dataFile using colPriorYearMedianAgi:colPerCapita title "WI Municipalities" with                                 points linestyle lsOther, \
+     ""       using colPriorYearMedianAgi:(column(colMuniCode)           == '13225' ? column(colPerCapita) : 1/0) \
+                                                       title "Fitchburg" with                                 points linestyle lsFitchburg, \
+     ""       using colPriorYearMedianAgi:(column(colPerCapita)           >    800  ? column(colPerCapita) : 1/0):colMuniName \
+                                                       notitle           with labels offset 5,-0.5, \
+     ""       using colPriorYearMedianAgi:(column(colPriorYearMedianAgi)  >    100  ? column(colPerCapita) : 1/0):colMuniName \
+                                                       notitle           with labels offset 0, 4 rotate by 90;
