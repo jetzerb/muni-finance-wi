@@ -13,7 +13,7 @@ set y2tics;
 set ytics nomirror;
 set grid;
 
-set key off;
+set key inside bottom left offset 0, 2;
 
 set xrange[2012:]; # only data from 2014 onward, but give graph some padding
 

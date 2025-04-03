@@ -13,7 +13,7 @@ set y2tics;
 set ytics nomirror;
 set grid;
 
-set key off;
+set key inside bottom center offset 4,1;
 
 
 # Plot the data
