@@ -12,6 +12,8 @@ create table MuniBudget
 	,LevyTID            decimal(17,2)
 	,LevyCityOther      decimal(17,2) -- any other city-related collections
 
+	,InterGovRevenue    decimal(17,2)
+
 	-- Pass-throughs to other jurisdictions
 	,LevySchool1        decimal(17,2)
 	,LevySchool2        decimal(17,2)

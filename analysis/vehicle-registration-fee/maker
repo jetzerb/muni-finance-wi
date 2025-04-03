@@ -15,20 +15,24 @@ do
 done;
 
 
+datafile="financial-data.txt";
 duckdb "$ddbFile" <property-tax-data.sql |
-sed 's/NULL//g;' > financial-data.txt;
+sed 's/NULL//g;' > "$datafile";
 
 
 for file in [a-zA-Z]*.gpi
 do
-	pdf=${file/.gpi/};
-	echo "generating $pdf from $file";
+	base=${file/.gpi/};
+	echo "generating $base from $file";
 	minCol=$(head -1 "$file");
+	range=$(sed -n '2{s/  *#.*//;p;q;}' "$file");
+	sed -n "/^$range/,\$p" "$datafile" > "${base}.txt";
 	(
 		sed "
-			s/FILENAME/$pdf/g;
+			s/FILENAME/$base/g;
 			s/MINCOL/$minCol/;
 		" _header.gpi;
-		cat "$file";
+		sed -n '3,$p' "$file";
 	) | tee /tmp/"$file" | gnuplot;
+	rm "${base}.txt";
 done;

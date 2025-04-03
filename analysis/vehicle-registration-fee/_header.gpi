@@ -1,20 +1,25 @@
 # Set terminal and output file
 set terminal pdfcairo size 11, 8.5 font "Arial,32" linewidth 5;
+set key font ",24";
 set pointsize 1.5;
 set output "FILENAME.pdf"
 
 # define my colors
 # Note: these should be OK for color blind people (Okabe and Ito)
-colorSFH    = "#56b4e9"; # blue
+colorSFH    = "#56b4e9"; # light blue
 colorPerCap = "#cc79a7"; # pink/purple
-colorIncome = "#e69f00"; # orange
+colorIncNat = "#e69f00"; # orange
+colorIncLoc = "#d55e00"; # dark orange
+colorPoint  = "#000000"; # black, for individual points
 colorMin    = "#009e73"; # green
 
 # define line style indices
 lsSFH    = 1;
 lsPerCap = 2;
-lsIncome = 3;
-lsMin    = 4;
+lsIncNat = 3;
+lsIncLoc = 4;
+lsPoint  = 5;
+lsMin    = 6;
 
 # define data columns
 colYear                    =  1;
@@ -32,21 +37,30 @@ colLevyGrandTotal          = 12;
 colLevyCityPct             = 13;
 colInflAdjCityPerCapita    = 14;
 colInflAdjCityPerCapitaVRF = 15;
+colSFTaxToNatlMedianWage   = 16;
+colSFTaxToLocalMedianWage  = 17;
+colPerCapToNatlMedianWage  = 18;
+colPerCapToLocalMedianWage = 19;
 
 
 MINCOL
 
 # Read data from file
 set datafile separator "\t";
-taxfile = "financial-data.txt";
+dataFile = "FILENAME.txt";
 
-# Calculate the minimum value of the second column
-stats taxfile using ($1 > 2010 && column(minCol) > 0 ? column(minCol) : 1/0) nooutput;
+# Calculate stats on the column we're tracking
+stats dataFile using (column(colYear) > 2010 && column(minCol) > 0 ? column(minCol) : 1/0) nooutput;
 min_since_library = STATS_min;
+max_since_library = STATS_max;
 
 # Define styles for the series
 set style line lsSFH    linecolor rgb colorSFH    pointtype  7 linetype 1;  # Circles with lines
 set style line lsPerCap linecolor rgb colorPerCap pointtype  5 linetype 1;  # Squares with lines
-set style line lsIncome linecolor rgb colorIncome pointtype 13 linetype 1;  # Diamonds with lines
+set style line lsIncNat linecolor rgb colorIncNat pointtype  9 linetype 1;  # Upward triangles with lines
+set style line lsIncLoc linecolor rgb colorIncLoc pointtype 11 linetype 1;  # Downward triangles with lines
+set style line lsPoint  linecolor rgb colorPoint  pointtype 13           ;  # Diamonds
 set style line lsMin    linecolor rgb colorMin                 linetype 1;  # Lines only
+
+set grid;
 #--------------------------------------------------------------------------------

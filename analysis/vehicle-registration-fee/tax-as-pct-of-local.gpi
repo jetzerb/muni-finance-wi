@@ -1,0 +1,22 @@
+minCol = colInflAdjMedSFTax; # dummy value; not displaying minimum here
+2003  # minimum year I care about
+
+
+# Set labels and titles
+set xlabel  "Year";
+set ylabel  "SFH Tax as % of Fitchburg Median Household Income"           textcolor rgb colorSFH;
+set y2label "Per Capita Budget as % of Fitchburg Median Household Income" textcolor rgb colorPerCap;
+set title   "Property Tax as % of Fitchburg Median Household Income";
+
+# Enable secondary y-axis
+set y2tics;
+set ytics nomirror;
+set grid;
+
+set key off;
+
+set xrange[2012:]; # only data from 2014 onward, but give graph some padding
+
+# Plot the data
+plot dataFile using colYear:colSFTaxToLocalMedianWage              title "SFH Percentage"              with linespoints linestyle lsSFH, \
+     ""       using colYear:colPerCapToLocalMedianWage axes x1y2   title "Per Capita Percentage"       with linespoints linestyle lsPerCap;

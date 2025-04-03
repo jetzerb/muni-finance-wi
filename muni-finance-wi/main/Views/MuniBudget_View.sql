@@ -6,6 +6,7 @@ as
 select
 	 *
 	,LevyGrandTotal: cnv.LevyCityTotal + cnv.LevyOverlyingTotal
+	,OperatingTotal: cnv.LevyCityTotal + coalesce(InterGovRevenue,0)
 
 from
 	 MuniBudget
