@@ -10,11 +10,11 @@ select
 	,bud.AssessedValue
 	,bud.EqualizedValue
 
-	,MedianSFAssessed           :      cln.MedianSFAssessed
+	,MedianSFAssessedK          :      cln.MedianSFAssessedK
 	,MedianSFTax                :      cln.MedianSFTax
 	,InflAdjMedSFTax            : cast(cln.MedianSFTax * cln.Inflation as bigint)
 
-	,MedianMFAssessed           :      cln.MedianMFAssessed
+	,MedianMFAssessedK          :      cln.MedianMFAssessedK
 	,MedianMFTax                :      cln.MedianMFTax
 	,InflAdjMedMFTax            : cast(cln.MedianMFTax * cln.Inflation as bigint)
 
@@ -46,17 +46,17 @@ from           MuniBudget_View    bud
      left join lateral (select * from MuniPop pop where pop.Year = bud.Year+1 and pop.MuniCode = bud.MuniCode order by IsCensus desc limit 1) pop on true
     ,lateral (
 	select
-		 Dec               :      nullif(cpi.Dec               ,0)
-		,AwiMedian         : cast(nullif(awi.AwiMedian         ,0) as bigint)
-		,AgiMedian         : cast(nullif(agi.AgiMedian         ,0) as bigint)
-		,MedianSFAssessed  : cast(nullif(bud.MedianSFAssessed  ,0) as bigint)
-		,MedianSFTax       : cast(nullif(bud.MedianSFTax       ,0) as bigint)
-		,MedianMFAssessed  : cast(nullif(bud.MedianMFAssessed  ,0) as bigint)
-		,MedianMFTax       : cast(nullif(bud.MedianMFTax       ,0) as bigint)
-		,LevyCityTotal     : cast(nullif(bud.LevyCityTotal     ,0) as bigint)
-		,OperatingTotal    : cast(nullif(bud.OperatingTotal    ,0) as bigint)
-		,LevyOverlyingTotal: cast(nullif(bud.LevyOverlyingTotal,0) as bigint)
-		,LevyGrandTotal    : cast(nullif(bud.LevyGrandTotal    ,0) as bigint)
+		 Dec               :      nullif(cpi.Dec                    ,0)
+		,AwiMedian         : cast(nullif(awi.AwiMedian              ,0) as bigint)
+		,AgiMedian         : cast(nullif(agi.AgiMedian              ,0) as bigint)
+		,MedianSFAssessedK : cast(nullif(bud.MedianSFAssessed / 1000,0) as bigint)
+		,MedianSFTax       : cast(nullif(bud.MedianSFTax            ,0) as bigint)
+		,MedianMFAssessedK : cast(nullif(bud.MedianMFAssessed / 1000,0) as bigint)
+		,MedianMFTax       : cast(nullif(bud.MedianMFTax            ,0) as bigint)
+		,LevyCityTotal     : cast(nullif(bud.LevyCityTotal          ,0) as bigint)
+		,OperatingTotal    : cast(nullif(bud.OperatingTotal         ,0) as bigint)
+		,LevyOverlyingTotal: cast(nullif(bud.LevyOverlyingTotal     ,0) as bigint)
+		,LevyGrandTotal    : cast(nullif(bud.LevyGrandTotal         ,0) as bigint)
 		,Inflation         : cur.Dec / cpi.Dec
      ) cln
     ,lateral (
