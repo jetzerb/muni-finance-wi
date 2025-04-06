@@ -22,9 +22,8 @@ subsequent counties by 1.
 The Dept of Revenue added Menominee to the end with ID 72. The following table
 illustrates the differences:
 
-+-----+-----+-----------+
 | DOR | DOA |  County   |
-+-----+-----+-----------+
+| --- |---- | --------- |
 | ... | ... | ...       |
 | 37  | 37  | Marathon  |
 | 38  | 38  | Marinette |
@@ -37,7 +36,6 @@ illustrates the differences:
 | 70  | 71  | Winnebago |
 | 71  | 72  | Wood      |
 | 72  | 40  | Menominee |
-+-----+-----+-----------+
 
 Because the initial datasets consisted of two from the DOR and one from the DOA,
 the DOR identifier is `MuniCode` everywhere, and in the `Municipality` table,
