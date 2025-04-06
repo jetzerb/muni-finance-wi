@@ -24,6 +24,7 @@ select
 	,LevyCityPct                : cast( cln.LevyCityTotal        * 100 / cln.LevyGrandTotal as decimal(6,3))
 	,LevyCityPctVRF             : cast((cln.LevyCityTotal + 1e6) * 100 / cln.LevyGrandTotal as decimal(6,3))
 
+	,CityPerCapita              :      cnv.CityPerCap
 	,InflAdjCityPerCapita       : cast(cnv.CityPerCap    * cln.Inflation as bigint)
 	,InflAdjCityPerCapitaVRF    : cast(cnv.CityPerCapVRF * cln.Inflation as bigint)
 

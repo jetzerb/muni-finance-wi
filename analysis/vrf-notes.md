@@ -10,6 +10,8 @@ While property taxes have risen each year, and the budget has grown each year, i
   - Read values from the left-hand scale.
   - Information pulled from [City of Fitchburg budgets](https://fitchburgwi.gov/1998/Financial-Records-Reports) 2008-2025.
 
+- Faint Blue line = SFH Tax in nominal dollars
+
 - Pink/Purple line = National Median Income, Inflation-Adjusted to Dec 2024 dollars.
   - Read values from the right-hand scale.
   - Information pulled from SSA.Gov's [National Average Wage Index](https://www.ssa.gov/OACT/COLA/AWI.html)
@@ -24,7 +26,7 @@ While property taxes have risen each year, and the budget has grown each year, i
 ## sfh-tax-local
 - Similar to the last chart.
 
-- Blue is again Property Tax on SFH, adjusted to 2024 dollars.
+- Blue lines same as the previous slide.
 
 - Blue diamond is again the effect of adding $80, and still at historic low.
 
@@ -41,6 +43,8 @@ While property taxes have risen each year, and the budget has grown each year, i
 - Gold Line = Total City Operating Budget, divided by the number of residents, adjusted to Dec 2024 dollars.
   - This is the entire city portion of the tax levy plus all intergovernmental aid.
   - Population information was taken from the WI DOA's [Population and Housing Unit Estimates](https://doa.wi.gov/Pages/LocalGovtsGrants/Population_Estimates.aspx) page -- Time Series 1970-2024 municipalities spreadsheet.
+
+- Faint Gold line = Per Capita budget in nominal dollars
 
 - Gold Diamond is the effect of an extra $1M factored into the levy.  The result is still lower than all but one year since the library.
 
@@ -139,3 +143,10 @@ A couple more slides for informational purposes:
 - Current per-capita operating budget buying power is at a 15 year low
 
 - The effect of a $40 VRF is helpful but still leaves us in roughly the same position
+
+- While this will be a regressive tax in some instances
+  - Per the WI DOT, about 1/3 of all driving-age residents do not drive.  If you don't have a car, you won't pay.
+  - This is not part of the property tax levy, so there is no chance that landlords can use this as justification to raise rents
+  - Write your state senator and assembly person about disbursing some of that $4.6B surplus be disbursed to municipalities
+    - $4.6B / 6M state residents = $767 per person
+    - $767 * 35,125 Fitchburg residents = nearly $27M

@@ -4,26 +4,6 @@ set key font ",24";
 set pointsize 1.5;
 set output "FILENAME.pdf"
 
-# define my colors
-# Note: these should be OK for color blind people (Okabe and Ito)
-colorSFH         = "#56b4e9"; # light blue
-colorPointSFH    = "#0072b2"; # dark blue
-colorIncome      = "#cc79a7"; # pink/purple
-colorPerCap      = "#e69f00"; # orange
-colorPointPerCap = "#d55e00"; # dark orange
-colorCity        = "#000000"; # black
-colorMin         = "#009e73"; # green
-
-# define line style indices
-i = 1;
-lsSFH         = i; i = i + 1;
-lsPerCap      = i; i = i + 1;
-lsIncome      = i; i = i + 1;
-lsPointSFH    = i; i = i + 1;
-lsPointPerCap = i; i = i + 1;
-lsMin         = i; i = i + 1;
-lsCity        = i; i = i + 1;
-
 # define data columns
 i = 1;
 colYear                       = i; i = i + 1;
@@ -44,6 +24,7 @@ colLevyOverlyingTotal         = i; i = i + 1;
 colLevyGrandTotal             = i; i = i + 1;
 colLevyCityPct                = i; i = i + 1;
 colLevyCityPctVRF             = i; i = i + 1;
+colCityPerCapita              = i; i = i + 1;
 colInflAdjCityPerCapita       = i; i = i + 1;
 colInflAdjCityPerCapitaVRF    = i; i = i + 1;
 colSFTaxToNatlMedianWage      = i; i = i + 1;
@@ -54,6 +35,36 @@ colPerCapToNatlMedianWage     = i; i = i + 1;
 colPerCapToNatlMedianWageVRF  = i; i = i + 1;
 colPerCapToLocalMedianWage    = i; i = i + 1;
 colPerCapToLocalMedianWageVRF = i; i = i + 1;
+
+# define my colors
+# Note: these should be OK for color blind people (Okabe and Ito)
+colorSFH         = "#56b4e9"; # light blue
+colorSFHNom      = "#ddf0fa"; # above, 80% of the way to white
+colorPointSFH    = "#0072b2"; # dark blue
+
+colorIncome      = "#cc79a7"; # pink/purple
+
+colorPerCap      = "#e69f00"; # orange
+colorPerCapNom   = "#faebcc"; # above, 80% of the wya to white
+
+colorPointPerCap = "#d55e00"; # dark orange
+
+colorCity        = "#000000"; # black
+colorMin         = "#009e73"; # green
+
+
+# define line style indices
+i = 1;
+lsSFH         = i; i = i + 1;
+lsSFHNom      = i; i = i + 1;
+lsPerCap      = i; i = i + 1;
+lsPerCapNom   = i; i = i + 1;
+lsIncome      = i; i = i + 1;
+lsPointSFH    = i; i = i + 1;
+lsPointPerCap = i; i = i + 1;
+lsMin         = i; i = i + 1;
+lsCity        = i; i = i + 1;
+
 
 MINCOL
 
@@ -68,8 +79,10 @@ max_since_library = STATS_max;
 
 # Define styles for the series
 set style line lsSFH         linecolor rgb colorSFH         pointtype  7 linetype 1;  # Circles with lines
+set style line lsSFHNom      linecolor rgb colorSFHNom      pointtype  7 linetype 1;  # Circles with lines
 set style line lsPointSFH    linecolor rgb colorPointSFH    pointtype 13           ;  # Diamonds
 set style line lsPerCap      linecolor rgb colorPerCap      pointtype  5 linetype 1;  # Squares with lines
+set style line lsPerCapNom   linecolor rgb colorPerCapNom   pointtype  5 linetype 1;  # Squares with lines
 set style line lsPointPerCap linecolor rgb colorPointPerCap pointtype 13           ;  # Diamonds
 set style line lsIncome      linecolor rgb colorIncome      pointtype  9 linetype 1;  # Upward triangles with lines
 set style line lsMin         linecolor rgb colorMin                      linetype 1;  # Lines only

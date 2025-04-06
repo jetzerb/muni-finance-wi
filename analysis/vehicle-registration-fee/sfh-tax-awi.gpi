@@ -17,7 +17,8 @@ set key inside top left;
 
 
 # Plot the data
-plot dataFile using colYear:colInflAdjMedSFTax                  title "SFH Tax"                 with linespoints linestyle lsSFH, \
+plot dataFile using colYear:colMedianSFTax                      title "SFH Tax (Nominal)"       with linespoints linestyle lsSFHNom, \
+     ""       using colYear:colInflAdjMedSFTax                  title "SFH Tax (2024$)"         with linespoints linestyle lsSFH, \
      ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2011 ? "Library"       : "") with labels offset  0,-2 rotate by 90 notitle, \
      ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -2,-2 rotate by 90 notitle, \
      ""       using colYear:(column(colYear) == 2024 ? column(colInflAdjMedSFTax)+80 : 1/0) \
