@@ -1,3 +1,4 @@
+
 # Fitchburg Vehicle Registration Fee Notes
 
 ## Introduction
@@ -5,10 +6,13 @@ Rationale for collecting additional revenue.
 
 While property taxes have risen each year, and the budget has grown each year, inflation has reduced the buying power substantially.
 
+Since 2020, SFH tax has risen by less than 5%, while inflation and wages have increased by over 20%
+
 ## sfh-tax-awi
 - Blue line = Property Tax on Single Family Home over the years, Inflation-Adjusted to Dec 2024 dollars.
   - Read values from the left-hand scale.
-  - Information pulled from [City of Fitchburg budgets](https://fitchburgwi.gov/1998/Financial-Records-Reports) 2008-2025.
+  - Property Tax Information pulled from [City of Fitchburg budgets](https://fitchburgwi.gov/1998/Financial-Records-Reports) 2008-2025
+  - CPI data from [US Inflation Calculator](https://www.usinflationcalculator.com/inflation/consumer-price-index-and-annual-percent-changes-from-1913-to-2008/)
 
 - Faint Blue line = SFH Tax in nominal dollars
 
@@ -18,13 +22,13 @@ While property taxes have risen each year, and the budget has grown each year, i
 
 - Note that Income has steadily increased since 2011, with one minor COVID dip in 2020.
 
-- Note that the _buying power_ of the SFH Property Tax from 2022 onward has been lower than at any point since we took on the library, and has been decreasing since 2020 while income has risen during that same time.  We'll dive into this further a couple slides from now.
+- Note that the _buying power_ of the SFH Property Tax has been decreasing since 2020 and from 2022 onward has been lower than at any point since we took on the library, while income has risen during that same time.  We'll say more about later on.
 
 - The lone blue diamond on the right shows what the effect of 2-car VRF (i.e., an extra $80) would have been on the 2024 tax bill.  Even with the VRF, the buying power is still at the lowest point since the library came online.
 
 
 ## sfh-tax-local
-- Similar to the last chart.
+- Similar to the last chart, but with Fitchburg Median AGI rather than US Median Wage.
 
 - Blue lines same as the previous slide.
 
@@ -54,12 +58,14 @@ While property taxes have risen each year, and the budget has grown each year, i
 
 
 ## percap-budget-local
-- Similar to the last chart, but with Fitchburg Median Income rather than National.
+- Similar to the last chart, but with Fitchburg Median AGI rather than National.
 
-- Again, the buying power of the per-capita budget has fallen though the median income remains at the highest recordded inflation-adjusted levels.
+- Again, the buying power of the per-capita budget has fallen though the median income remains at the highest inflation-adjusted levels in the 10 year dataset.
 
 
 ## tax-as-pct-of-awi
+The tax burden can be measured based on how much of your income it represents.  That's what these next two slides show.
+
 - Blue Line is SFH Tax divided by National Median Income for each year.
   - No need to adjust for inflation--this is just the percentage of median income that the city's portion of the tax bill represents during each year we have data for.
   - Note that the property tax burden is currently at the lowest point in two decades.
@@ -84,9 +90,13 @@ While property taxes have risen each year, and the budget has grown each year, i
 
 
 ## city-portion
-- As we're all aware, the city's levy is a minority of the entire tax bill.
+As we're all aware, the portion of the property tax bill that goes to the city is relatively small -- roughly 1/3.
+- Schools take the biggest chunk
+- Then the City
+- Then the County
+- And finally Madison College
 
-- This chart shows the city's portion of the total levy over time.  We have data only back to 2008.
+This chart shows the city's portion of the total levy over time.  We have data only back to 2008.
 
 - City's share has been shrinking since 2018
 
@@ -95,9 +105,9 @@ While property taxes have risen each year, and the budget has grown each year, i
 - Even with the extra $1M VRF, still lower than any point since the library
 
 
-A couple more slides for informational purposes:
-
 ## tax-vs-assessed-value
+A couple more slides for informational purposes / public service announcement:
+
 - Every time we have a revaluation year and increased assessments go out, residents get uneasy and worry about their property tax bill for the next half year
 
 - Most residents aren't aware that the tax levy is largely independent of their assessed value, because everyone's assessment goes up by roughly the same amount, so everyone's share of the pie remains fairly constant
@@ -113,19 +123,23 @@ A couple more slides for informational purposes:
   - 2024 revaluation: assessed value up 20%, property tax up 3%
 
 ## shared-revenue
-- In 2024, the state significantly increased the amount of shared revenue to the municipalities
+In 2024, the state significantly increased the amount of shared revenue to the municipalities
 
-- Fitchburg's share was over $800,000
+- Fitchburg's increase was over $800,000
 
 - How did Fitchburg fare compared to other municipalities?
 
-- Plot shows all 1850+ municipalities with median AGI on the x axis and per-capita shared revenue on the y axis
+- Plot shows shared revenue information for all 1850+ municipalities in 2024,
+  - with median AGI on the x axis
+  - per-capita shared revenue on the y axis
 
 - Outliers labeled (overlapping names hard to read)
   - over $100k AGI
   - over $800 per resident shared revenue
 
-- Fitchburg roughly $60 per resident and $60k AGI
+- Fitchburg roughly $63 per resident and $60k AGI
+  - 76% of municipalities got more shared revenue than Fitchburg
+  - but 87% of municipalities have lower AGI than Fitchburg
 
 
 ## shared-revenue-zoom
@@ -139,9 +153,10 @@ A couple more slides for informational purposes:
 
 ## Summary
 - Current SFH property tax buying power is at a 15 year low
-
 - Current per-capita operating budget buying power is at a 15 year low
-
+- Current tax amount as a share of median income is at a 15 year low
+- Since 2020, SFH tax has risen by less than 5%, while inflation and wages have increased by over 20%
+- To keep pace the SFH increase would need to be about $425/yr
 - The effect of a $40 VRF is helpful but still leaves us in roughly the same position
 
 - While this will be a regressive tax in some instances

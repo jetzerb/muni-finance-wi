@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+IFS=$'\t\n';
+set -euo pipefail;
+
+# Compile all the individual plots into a single multi-page PDF
+# in a specific order
+
+pdfunite \
+	sfh-tax-awi.pdf \
+	sfh-tax-local.pdf \
+	percap-budget-awi.pdf \
+	percap-budget-local.pdf \
+	tax-as-pct-of-awi.pdf \
+	tax-as-pct-of-local.pdf \
+	city-portion.pdf \
+	tax-vs-assessed-value.pdf \
+	../shared-revenue/shared-revenue.pdf \
+	../shared-revenue/shared-revenue-zoom.pdf \
+	vrf-property-tax-slides.pdf;
