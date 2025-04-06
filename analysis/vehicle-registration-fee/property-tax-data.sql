@@ -3,8 +3,10 @@
 select
 	 bud.Year
 	,DecCPI                     :      cln.Dec
+	,NatlMedianWage             : cast(cln.AwiMedian                   as bigint)
 	,InflAdjNatlMedianWage      : cast(cln.AwiMedian   * cln.Inflation as bigint)
 
+	,LocalMedianWage            : cast(cln.AgiMedian                   as bigint)
 	,InflAdjLocalMedianWage     : cast(cln.AgiMedian   * cln.Inflation as bigint)
 	,pop.Population
 	,bud.AssessedValue

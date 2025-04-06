@@ -5,65 +5,79 @@ set pointsize 1.5;
 set output "FILENAME.pdf"
 
 # define data columns
-i = 1;
-colYear                       = i; i = i + 1;
-colDecCPI                     = i; i = i + 1;
-colInflAdjNatlMedianWage      = i; i = i + 1;
-colInflAdjLocalMedianWage     = i; i = i + 1;
-colPopulation                 = i; i = i + 1;
-colAssessedValue              = i; i = i + 1;
-colEqualizedValue             = i; i = i + 1;
-colMedianSFAssessedK          = i; i = i + 1;
-colMedianSFTax                = i; i = i + 1;
-colInflAdjMedSFTax            = i; i = i + 1;
-colMedianMFAssessedK          = i; i = i + 1;
-colMedianMFTax                = i; i = i + 1;
-colInflAdjMedMFTax            = i; i = i + 1;
-colLevyCityTotal              = i; i = i + 1;
-colLevyOverlyingTotal         = i; i = i + 1;
-colLevyGrandTotal             = i; i = i + 1;
-colLevyCityPct                = i; i = i + 1;
-colLevyCityPctVRF             = i; i = i + 1;
-colCityPerCapita              = i; i = i + 1;
-colInflAdjCityPerCapita       = i; i = i + 1;
-colInflAdjCityPerCapitaVRF    = i; i = i + 1;
-colSFTaxToNatlMedianWage      = i; i = i + 1;
-colSFTaxToNatlMedianWageVRF   = i; i = i + 1;
-colSFTaxToLocalMedianWage     = i; i = i + 1;
-colSFTaxToLocalMedianWageVRF  = i; i = i + 1;
-colPerCapToNatlMedianWage     = i; i = i + 1;
-colPerCapToNatlMedianWageVRF  = i; i = i + 1;
-colPerCapToLocalMedianWage    = i; i = i + 1;
-colPerCapToLocalMedianWageVRF = i; i = i + 1;
+i = 0;
+
+i = i + 1; colYear                       = i;
+i = i + 1; colDecCPI                     = i;
+i = i + 1; colNatlMedianWage             = i;
+i = i + 1; colInflAdjNatlMedianWage      = i;
+
+i = i + 1; colLocalMedianWage            = i;
+i = i + 1; colInflAdjLocalMedianWage     = i;
+i = i + 1; colPopulation                 = i;
+i = i + 1; colAssessedValue              = i;
+i = i + 1; colEqualizedValue             = i;
+
+i = i + 1; colMedianSFAssessedK          = i;
+i = i + 1; colMedianSFTax                = i;
+i = i + 1; colInflAdjMedSFTax            = i;
+
+i = i + 1; colMedianMFAssessedK          = i;
+i = i + 1; colMedianMFTax                = i;
+i = i + 1; colInflAdjMedMFTax            = i;
+
+i = i + 1; colLevyCityTotal              = i;
+i = i + 1; colLevyOverlyingTotal         = i;
+i = i + 1; colLevyGrandTotal             = i;
+i = i + 1; colLevyCityPct                = i;
+i = i + 1; colLevyCityPctVRF             = i;
+
+i = i + 1; colCityPerCapita              = i;
+i = i + 1; colInflAdjCityPerCapita       = i;
+i = i + 1; colInflAdjCityPerCapitaVRF    = i;
+
+i = i + 1; colSFTaxToNatlMedianWage      = i;
+i = i + 1; colSFTaxToNatlMedianWageVRF   = i;
+i = i + 1; colSFTaxToLocalMedianWage     = i;
+i = i + 1; colSFTaxToLocalMedianWageVRF  = i;
+
+i = i + 1; colPerCapToNatlMedianWage     = i;
+i = i + 1; colPerCapToNatlMedianWageVRF  = i;
+i = i + 1; colPerCapToLocalMedianWage    = i;
+i = i + 1; colPerCapToLocalMedianWageVRF = i;
+
+
+
 
 # define my colors
 # Note: these should be OK for color blind people (Okabe and Ito)
 colorSFH         = "#56b4e9"; # light blue
 colorSFHNom      = "#ddf0fa"; # above, 80% of the way to white
-colorPointSFH    = "#0072b2"; # dark blue
+colorSFHPoint    = "#0072b2"; # dark blue
 
 colorIncome      = "#cc79a7"; # pink/purple
+colorIncomeNom   = "#f4e4ed"; # above, 80% of the way to white
 
 colorPerCap      = "#e69f00"; # orange
-colorPerCapNom   = "#faebcc"; # above, 80% of the wya to white
-
-colorPointPerCap = "#d55e00"; # dark orange
+colorPerCapNom   = "#faebcc"; # above, 80% of the way to white
+colorPerCapPoint = "#d55e00"; # dark orange
 
 colorCity        = "#000000"; # black
 colorMin         = "#009e73"; # green
 
 
-# define line style indices
-i = 1;
-lsSFH         = i; i = i + 1;
-lsSFHNom      = i; i = i + 1;
-lsPerCap      = i; i = i + 1;
-lsPerCapNom   = i; i = i + 1;
-lsIncome      = i; i = i + 1;
-lsPointSFH    = i; i = i + 1;
-lsPointPerCap = i; i = i + 1;
-lsMin         = i; i = i + 1;
-lsCity        = i; i = i + 1;
+# define line styles
+i = 0;
+i = i + 1; lsSFH         = i; set style line lsSFH         linecolor rgb colorSFH         pointtype  7 linetype 1;  # Circles with lines
+i = i + 1; lsSFHNom      = i; set style line lsSFHNom      linecolor rgb colorSFHNom      pointtype  7 linetype 1;  # Circles with lines
+i = i + 1; lsSFHPoint    = i; set style line lsSFHPoint    linecolor rgb colorSFHPoint    pointtype 13           ;  # Diamonds
+i = i + 1; lsPerCap      = i; set style line lsPerCap      linecolor rgb colorPerCap      pointtype  5 linetype 1;  # Squares with lines
+i = i + 1; lsPerCapNom   = i; set style line lsPerCapNom   linecolor rgb colorPerCapNom   pointtype  5 linetype 1;  # Squares with lines
+i = i + 1; lsPerCapPoint = i; set style line lsPerCapPoint linecolor rgb colorPerCapPoint pointtype 13           ;  # Diamonds
+i = i + 1; lsIncome      = i; set style line lsIncome      linecolor rgb colorIncome      pointtype  9 linetype 1;  # Upward triangles with lines
+i = i + 1; lsIncomeNom   = i; set style line lsIncomeNom   linecolor rgb colorIncomeNom   pointtype  9 linetype 1;  # Upward triangles with lines
+i = i + 1; lsMin         = i; set style line lsMin         linecolor rgb colorMin                      linetype 1;  # Lines only
+i = i + 1; lsCity        = i; set style line lsCity        linecolor rgb colorCity        pointtype 15 linetype 1;  # Pentagons with lines
 
 
 MINCOL
@@ -76,17 +90,6 @@ dataFile = "FILENAME.txt";
 stats dataFile using (column(colYear) > 2010 && column(minCol) > 0 ? column(minCol) : 1/0) nooutput;
 min_since_library = STATS_min;
 max_since_library = STATS_max;
-
-# Define styles for the series
-set style line lsSFH         linecolor rgb colorSFH         pointtype  7 linetype 1;  # Circles with lines
-set style line lsSFHNom      linecolor rgb colorSFHNom      pointtype  7 linetype 1;  # Circles with lines
-set style line lsPointSFH    linecolor rgb colorPointSFH    pointtype 13           ;  # Diamonds
-set style line lsPerCap      linecolor rgb colorPerCap      pointtype  5 linetype 1;  # Squares with lines
-set style line lsPerCapNom   linecolor rgb colorPerCapNom   pointtype  5 linetype 1;  # Squares with lines
-set style line lsPointPerCap linecolor rgb colorPointPerCap pointtype 13           ;  # Diamonds
-set style line lsIncome      linecolor rgb colorIncome      pointtype  9 linetype 1;  # Upward triangles with lines
-set style line lsMin         linecolor rgb colorMin                      linetype 1;  # Lines only
-set style line lsCity        linecolor rgb colorCity        pointtype 15 linetype 1;  # Pentagons with lines
 
 set grid;
 #--------------------------------------------------------------------------------

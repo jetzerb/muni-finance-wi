@@ -19,9 +19,9 @@ set key inside bottom right;
 # Plot the data
 plot dataFile using colYear:colCityPerCapita                     title "Budget Per Capita (Nominal)"  with linespoints linestyle lsPerCapNom, \
      ""       using colYear:colInflAdjCityPerCapita              title "Budget Per Capita (2024$)"    with linespoints linestyle lsPerCap, \
-     ""       using colYear:colInflAdjCityPerCapita :(column(colYear) == 2011 ? "Library"       : "") with labels offset  -3, 1 notitle, \
-     ""       using colYear:colInflAdjCityPerCapita :(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -.5,-3.5 rotate by 90 notitle, \
+     ""       using colYear:colInflAdjCityPerCapita :(column(colYear) == 2011 ? "Library"       : "") with labels offset -3, 1 notitle, \
+     ""       using colYear:colInflAdjCityPerCapita :(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -3, 1 notitle, \
      ""       using colYear:(column(colYear) == 2023 ? column(colInflAdjCityPerCapitaVRF) : 1/0) \
-                                                                 title "VRF Effect"  with points linestyle lsPointPerCap, \
-     ""       using colYear:colInflAdjLocalMedianWage  axes x1y2 title "FItchburg Median Income"      with linespoints linestyle lsIncome, \
+                                                                 title "VRF Effect"                   with      points linestyle lsPerCapPoint, \
+     ""       using colYear:colInflAdjLocalMedianWage  axes x1y2 title "FItchburg Med Income (2024$)" with linespoints linestyle lsIncome, \
      min_since_library                                           title "Min Since Library"            with lines       linestyle lsMin;

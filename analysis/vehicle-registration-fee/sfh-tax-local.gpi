@@ -13,15 +13,16 @@ set y2tics;
 set ytics nomirror;
 set grid;
 
-set key inside top left;
+set key inside bottom right;
 
 
 # Plot the data
-plot dataFile using colYear:colMedianSFTax                      title "SFH Tax (Nominal)"       with linespoints linestyle lsSFHNom, \
-     ""       using colYear:colInflAdjMedSFTax                  title "SFH Tax (2024$)"         with linespoints linestyle lsSFH, \
-     ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2011 ? "Library"       : "") with labels offset  0,-2 rotate by 90 notitle, \
-     ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2018 ? "Fire Stations" : "") with labels offset -3,-2 rotate by 75 notitle, \
+plot dataFile using colYear:colMedianSFTax                      title "SFH Tax (Nominal)"            with linespoints linestyle lsSFHNom, \
+     ""       using colYear:colInflAdjMedSFTax                  title "SFH Tax (2024$)"              with linespoints linestyle lsSFH, \
+     ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2011 ? "Library"       : "")      with labels offset -3  , 1   notitle, \
+     ""       using colYear:colInflAdjMedSFTax:(column(colYear) == 2018 ? "Fire Stations" : "")      with labels offset -3.5, 1.3 notitle, \
      ""       using colYear:(column(colYear) == 2024 ? column(colInflAdjMedSFTax)+80 : 1/0) \
-                                                                title "2 Car VRF Effect"        with points      linestyle lsPointSFH, \
-     ""       using colYear:colInflAdjLocalMedianWage axes x1y2 title "Fitchburg Median Income" with linespoints linestyle lsIncome, \
-     min_since_library                                          title "Min Since Library"       with lines       linestyle lsMin;
+                                                                title "2 Car VRF Effect"             with points      linestyle lsSFHPoint, \
+     ""       using colYear:colInflAdjLocalMedianWage axes x1y2 title "Fitchburg Med Income (2024$)" with linespoints linestyle lsIncome, \
+     min_since_library                                          title "Min Since Library"            with lines       linestyle lsMin;
+    #""       using colYear:colLocalMedianWage        axes x1y2 title "Fitchburg Median Income (Nominal)" with linespoints linestyle lsIncomeNom, \
